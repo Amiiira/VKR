@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>FlowCraft — BPMN Modeler</title>
+
+  <!-- Core BPMN-js styles -->
+  <link rel="stylesheet" href="https://unpkg.com/bpmn-js@11.5.0/dist/assets/diagram-js.css">
+  <link rel="stylesheet" href="https://unpkg.com/bpmn-js@11.5.0/dist/assets/bpmn-js.css">
+  <link rel="stylesheet" href="https://unpkg.com/bpmn-js@11.5.0/dist/assets/bpmn-font/css/bpmn-embedded.css">
+
+  <link rel="stylesheet" href="static/css/style.css">
+  <script src="https://unpkg.com/bpmn-js@11.5.0/dist/bpmn-modeler.development.js"></script>
+</head>
+<body>
+  <header id="app-header">
+     <input type="file" id="importFile" hidden>
+     <button id="btnImport">📥 Импорт XML</button>
+     <button id="btnExport">📤 Экспорт XML</button>
+     <button id="btnPNG">🖼 Экспорт PNG</button>
+     <button id="btnSave">💾 Сохранить</button>
+     <button id="btnClear">🧹 Очистить холст</button>
+     <span id="saveInfo">Последнее сохранение: —</span>
+  </header>
+  <main id="app">
+     <div id="canvas"></div>
+  </main>
+  <script src="static/js/app.js"></script>
+</body>
+</html>
