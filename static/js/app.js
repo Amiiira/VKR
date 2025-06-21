@@ -1,11 +1,16 @@
+/* Инициализация редактора */
 const modeler = new BpmnJS({
   container: '#canvas',
   keyboard: { bindTo: window }
 });
 
-// load blank diagram
+/* Создание пустой схемы */
 async function createNewDiagram() {
-  const xml = `<?xml version="1.0" encoding="UTF-8"?><bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn"><bpmn:process id="Process_1" isExecutable="false"/><bpmndi:BPMNDiagram id="BPMNDiagram_1"><bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1"/></bpmndi:BPMNDiagram></bpmn:definitions>`;
+  const xml = `<?xml version="1.0" encoding="UTF-8"?><bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:process id="Process_1" isExecutable="false"/><bpmndi:BPMNDiagram id="BPMNDiagram_1">
+  <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1"/></bpmndi:BPMNDiagram></bpmn:definitions>`;
   try {
      await modeler.importXML(xml);
   } catch(err) {
@@ -13,6 +18,7 @@ async function createNewDiagram() {
   }
 }
 
+/* Загрузка схемы из localStorage или создание новой */
 window.addEventListener('DOMContentLoaded', async () => {
    const saved = localStorage.getItem('autosaveDiagram');
    if (saved){
@@ -26,6 +32,7 @@ window.addEventListener('DOMContentLoaded', async () => {
    }
 });
 
+/* Автосохранение каждые 10 секунд */
 const eventBus = modeler.get('eventBus');
 const contextPad = modeler.get('contextPad');
 eventBus.on('element.hover', 1000, ({ element }) => {
@@ -52,7 +59,10 @@ document.getElementById('btnPNG').addEventListener('click', async () => {
     const img = new Image();
     img.onload = () => {
         const canvas = Object.assign(document.createElement('canvas'), {width: img.width, height: img.height});
-        canvas.getContext('2d').drawImage(img,0,0);
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff'; // белый фон
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
         canvas.toBlob(blob => download(blob, 'diagram.png'));
     };
     img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
@@ -69,6 +79,7 @@ function updateSaveInfo(date){
    document.getElementById('saveInfo').textContent = 'Последнее сохранение: ' + date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
 }
 
+/* Автосохранение */
 async function saveDiagram(){
    try {
        const { xml } = await modeler.saveXML({ format:true });
